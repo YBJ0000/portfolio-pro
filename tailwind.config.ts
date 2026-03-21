@@ -8,7 +8,19 @@ export default {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: {
+          900: '#000212',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
+      },
+      animation: {
+        typing: 'typing-pulse 1.35s steps(1, end) infinite',
+      },
+    },
   },
   plugins: [typography],
 } satisfies Config
