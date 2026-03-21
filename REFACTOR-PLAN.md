@@ -74,7 +74,7 @@
 | `/blog`、`/blog/[slug]` | Sanity | 去掉 views / reactions；**博客块级评论**仍对应 **`comments` 表 + Clerk**（接库阶段再通） |
 | `/projects` | Sanity `settings.projects` | |
 | **`/guestbook`** | **Neon `guestbook` + Clerk** | **留言墙独立页面**；与博客评论不是同一套数据；视觉门禁阶段可 mock |
-| `/ama` | 静态或本地 JSON | |
+| `/about` | 静态或本地 JSON | About Me（刻意不用原站的 `/ama` 缩写） |
 | `/admin/*` | **极简或省略** | 若不做 admin，留言与评论 moderation 用 Neon GUI |
 | `/studio` | Sanity | 可继续沿用现 Studio 项目，与新版前端共用 dataset |
 | RSS / sitemap | Sanity | |
@@ -116,7 +116,7 @@
 1. **壳**：`layout`、明暗主题、`Header` / `Footer` / 导航；**无** WebGL 背景；**无** Newsletter、无访问量数字。
 2. **动效**：Framer Motion 按页保留与原版接近的入场与滚动表现。
 3. **图标**：占位方案统一。
-4. **页面顺序建议**：`/ama` → `/projects` → **`/guestbook`（列表+输入区 mock）** → `/blog` 列表与详情（含评论 UI 占位）→ 首页。
+4. **页面顺序建议**：`/about` → `/projects` → **`/guestbook`（列表+输入区 mock）** → `/blog` 列表与详情（含评论 UI 占位）→ 首页。
 5. **Clerk**：若 Header 依赖登录视觉，可接 **ClerkProvider** + `publicRoutes`；**留言墙与评论 API 可先不接**，用静态数据占位。
 6. **门禁标准**：主要页面一眼像原站（含 **留言墙版式**是否与现站一致）。
 
