@@ -10,7 +10,7 @@ import { LogIn } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import React from 'react'
+import React, { useLayoutEffect, useRef } from 'react'
 
 import { Container } from '~/components/ui/Container'
 import { clamp } from '~/lib/math'
@@ -92,18 +92,27 @@ function SignInPlaceholder() {
 export function Header() {
   const isHomePage = usePathname() === '/'
 
-  const headerRef = React.useRef<HTMLDivElement>(null)
-  const avatarRef = React.useRef<HTMLDivElement>(null)
-  const isInitial = React.useRef(true)
+  const headerRef = useRef<HTMLDivElement>(null)
+  const avatarRef = useRef<HTMLDivElement>(null)
+  const isInitial = useRef(true)
+  /** Matches CSS default `h-[var(--header-height,180px)]` until we measure the sentinel. */
+  const downDelayRef = useRef(180)
 
   const avatarX = useMotionValue(0)
   const avatarScale = useMotionValue(1)
   const avatarBorderX = useMotionValue(0)
   const avatarBorderScale = useMotionValue(1)
 
-  React.useEffect(() => {
-    const downDelay = avatarRef.current?.offsetTop ?? 0
+  useLayoutEffect(() => {
     const upDelay = 64
+
+    function measureDownDelay() {
+      const measured = avatarRef.current?.offsetTop ?? 0
+      if (measured > 0) {
+        downDelayRef.current = measured
+      }
+      return Math.max(downDelayRef.current, 1)
+    }
 
     function setProperty(property: string, value: string | null) {
       document.documentElement.style.setProperty(property, value)
@@ -129,6 +138,7 @@ export function Header() {
         setProperty('--header-position', 'sticky')
       }
 
+      const downDelay = measureDownDelay()
       setProperty('--content-offset', `${downDelay}px`)
 
       if (isInitial.current || scrollY < downDelay) {
@@ -158,6 +168,8 @@ export function Header() {
       if (!isHomePage) {
         return
       }
+
+      const downDelay = measureDownDelay()
 
       const fromScale = 1
       const toScale = 36 / 64

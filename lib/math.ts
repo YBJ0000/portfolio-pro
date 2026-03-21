@@ -1,3 +1,6 @@
-export function clamp(value: number, min: number, max: number) {
+/** Same semantics as first-portfolio: `a`/`b` can be in any order. */
+export function clamp(value: number, a: number, b: number) {
+  const min = Math.min(a, b)
+  const max = Math.max(a, b)
   return Math.min(Math.max(value, min), max)
 }
