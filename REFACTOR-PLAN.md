@@ -131,19 +131,44 @@
 
 **目标**：用 mock 数据跑通主流程，在浏览器里对比原站截图/本地双开。
 
-1. **壳**：`layout`、明暗主题、`Header` / `Footer` / 导航；**无** WebGL 背景；**无** Newsletter、无访问量数字。
-2. **动效**：Framer Motion 按页保留与原版接近的入场与滚动表现。
-3. **图标**：占位方案统一。
-4. **页面顺序建议**：`/about` → `/projects` → **`/guestbook`（列表+输入区 mock）** → `/blog` 列表与详情（含评论 UI 占位）→ 首页。
-5. **Clerk**：若 Header 依赖登录视觉，可接 **ClerkProvider** + `publicRoutes`；**留言墙与评论 API 可先不接**，用静态数据占位。
-6. **门禁标准**：主要页面一眼像原站（含 **留言墙版式**是否与现站一致）。
-7. **导航体验（可选前置）**：为将接动态数据的路由预留 **`loading.tsx`** 占位，避免阶段 2 起才补骨架；见 §二之二。
+**进度备忘（与代码库同步）**：详见 [`docs/phase1-status-and-data-strategy.md`](./docs/phase1-status-and-data-strategy.md) —— 含 **Sanity 数据形状**、**Blog/Project 卡片为何需 mock 或真连**、**Clerk 仅占位无法登录的原因**、**推荐实现顺序**。
 
-**若不通过**：优先调布局/字体/动效，**不要**先扩后端功能。
+**已大致达成的子项（雏形）**
+
+- [x] **壳**：`layout`、明暗主题、`Header` / `Footer` / 导航；无 WebGL、无 Newsletter、无访问量。
+- [x] **动效**：Framer Motion；首页头像滚动缩放 + 跨页 `layoutId`。
+- [x] **图标**：lucide 等占位。
+- [x] **响应式**与主题切换（以你本地验收为准）。
+
+**仍待补齐的子项（阶段 1 收尾 / 1.5）**
+
+- [ ] **`/blog` 列表**：与 first-portfolio **`BlogPostCard`** 一致的网格、悬浮、玻璃底栏；数据先用 **mock**（对齐 GROQ 列表字段）或 **直接接 Sanity**（需 client + `next.config` 图域，不止 `.env`）。
+- [ ] **`/projects`**：与 **`ProjectCard` + `Card`** 一致的三列网格与 hover 径向遮罩；数据来自 **mock projects** 或 **`getSettings().projects`**。
+- [ ] **`/guestbook`**：列表 + 输入区版式 mock（不仅是单行占位）。
+- [ ] **Clerk 真登录**：安装 SDK、`ClerkProvider`、`middleware`、替换 Header 占位按钮（当前 **disabled**，故无法 Sign in）。
+- [ ] **`loading.tsx`**（可选但推荐）：`/blog`、`/projects` 等；见 §二之二。
+
+**原规划条目（保留）**
+
+1. **壳** — 同上。
+2. **动效** — 同上。
+3. **图标** — 同上。
+4. **页面顺序建议**：`/about` → `/projects` → **`/guestbook`** → **`/blog`** 列表与详情 → 首页（可与「先 mock 卡片」并行，不强制严格顺序）。
+5. **Clerk**：接 **ClerkProvider** + `publicRoutes` 后方可登录；API 可后置。
+6. **门禁标准**：壳层已通过则可主观 **通过阶段 1**；**列表页视觉**建议以 mock/Sanity 卡片对齐后再关单。
+7. **导航体验**：`loading.tsx` 见 §二之二。
+
+**若不通过**：优先调布局/字体/动效；**列表页**优先 mock 形状 + 组件迁移，再接 CMS。
+
+### 阶段 1.5（可选）：仅 UI — mock Blog / Projects
+
+在阶段 2 全量 Sanity 之前，可用 **本地常量** 模拟 `Post` / `Project` 字段（见 `docs/phase1-status-and-data-strategy.md` §2.2），迁移 **`BlogPostCard`、`ProjectCard`、`components/ui/Card`** 自 first-portfolio（改为 `cn`、去 `@zolplay` / 去 Redis `views`）。**浏览量**可省略或写死假数，仅用于对齐排版。
 
 ### 阶段 2：接 Sanity（内容真源）
 
-1. 抽象 `getPosts` / `getPostBySlug` / `getSiteSettings`，实现 Sanity 驱动版本。
+> 若阶段 1.5 已用 mock 实现 `getPosts` / `getSiteSettings` 接口，本阶段主要为 **替换实现类**，页面组件尽量少改。
+
+1. 抽象 `getPosts` / `getPostBySlug` / `getSiteSettings`，实现 Sanity 驱动版本（可参考 first-portfolio `sanity/queries.ts` + `sanity/lib/client.ts`）。
 2. **`fetch` 缓存**：在封装内统一使用 `next: { revalidate, tags }`（或与 `@sanity/client` 配置对齐），**并行**拉取互不依赖的查询，避免瀑布请求（对齐性能文档 §4）。
 3. **渲染策略**：博客列表、文章页、项目、首页等优先 **静态生成 + ISR**，而非默认定态 `ƒ`；目标与旧站相比 **缩小 First Load JS、提高 CDN 命中率**（见 §二之二）。
 4. Portable Text：尽量复用现有渲染链；图片域名写入 `next.config`。
@@ -210,9 +235,12 @@ Sanity 图床、`next/image` 域名、metadata 与正文标题层级，继续影
 
 **阶段 1 结束（门禁）**
 
-- [ ] 无 Vanta/Three、无 Redis、无邮件相关 UI 与路由。
-- [ ] 核心页面在 mock 下可浏览，**观感接近** first-portfolio（**含 `/guestbook` 页面**）。
-- [ ] 依赖列表明显短于原项目；Framer Motion 保留且无明显卡顿。
+- [x] 无 Vanta/Three、无 Redis、无邮件相关 UI 与路由。
+- [x] **壳层**观感接近 first-portfolio（Header / Footer / 导航 / 主题 / 头像动效）；细则见 [`docs/phase1-status-and-data-strategy.md`](./docs/phase1-status-and-data-strategy.md)。
+- [ ] **`/blog`、`/projects`**：卡片与网格、悬浮效果与旧站一致（mock 或已接 Sanity）。
+- [ ] **`/guestbook`**：版式级 mock（列表 + 输入区）。
+- [ ] **Clerk**：可真实 Sign in（或明确推迟到阶段 3 前置并文档化）。
+- [x] 依赖列表明显短于原项目；Framer Motion 保留且无明显卡顿。
 
 **全部打通后**
 
@@ -238,7 +266,8 @@ Sanity 图床、`next/image` 域名、metadata 与正文标题层级，继续影
 | **勿再迁移** | `components/Vanta*`、`lib/redis.ts`（除非换限流实现）、`app/api/reactions`、`app/api/newsletter`、`emails/*`、Edge Config 分支 |
 | **性能与上线** | 见 `docs/performance-cold-start-and-navigation.md`；规划上对齐 **§二之二**、**§4.6**、阶段 2–3 |
 | **许可与致谢** | 根目录 `LICENSE`（MIT）、`NOTICE`（cali.so → first-portfolio → portfolio-pro）；§4.5 |
+| **阶段 1 进度与 Blog/Projects 数据** | `docs/phase1-status-and-data-strategy.md`（Sanity 形状、mock vs 真连、Clerk） |
 
 ---
 
-*文档版本：v6 — §4.5 写明 cali.so / first-portfolio / portfolio-pro 关系；仓库增加 `NOTICE` 致谢。*
+*文档版本：v7 — 阶段 1 拆「已达成 / 待补齐」；新增阶段 1.5、§五 细项；索引 `docs/phase1-status-and-data-strategy.md`。*
