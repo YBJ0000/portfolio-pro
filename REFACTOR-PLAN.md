@@ -140,13 +140,16 @@
 - [x] **图标**：lucide 等占位。
 - [x] **响应式**与主题切换（以你本地验收为准）。
 
-**仍待补齐的子项（阶段 1 收尾 / 1.5）**
+**已落地的子项（mock + 骨架）**
 
-- [ ] **`/blog` 列表**：与 first-portfolio **`BlogPostCard`** 一致的网格、悬浮、玻璃底栏；数据先用 **mock**（对齐 GROQ 列表字段）或 **直接接 Sanity**（需 client + `next.config` 图域，不止 `.env`）。
-- [ ] **`/projects`**：与 **`ProjectCard` + `Card`** 一致的三列网格与 hover 径向遮罩；数据来自 **mock projects** 或 **`getSettings().projects`**。
-- [ ] **`/guestbook`**：列表 + 输入区版式 mock（不仅是单行占位）。
-- [ ] **Clerk 真登录**：安装 SDK、`ClerkProvider`、`middleware`、替换 Header 占位按钮（当前 **disabled**，故无法 Sign in）。
-- [ ] **`loading.tsx`**（可选但推荐）：`/blog`、`/projects` 等；见 §二之二。
+- [x] **`/blog`**：mock 列表 + **`BlogPostCard`**（玻璃底栏、hover 抬起）；`/blog/[slug]` 为 **静态 mock 详情**（阶段 2 换 Portable Text）。
+- [x] **`/projects`**：**`ProjectCard` + `Card`** + mock 数据（Unsplash 占位 icon）。
+- [x] **`/guestbook`**：**`GuestbookMockInput`** + **`GuestbookMockFeeds`** + `data/mock/guestbook.ts`（无 API、无 Clerk）。
+- [x] **`loading.tsx`**：`/blog`、`/blog/[slug]`、`/projects`、`/guestbook`；本地如何验收见 [`docs/phase1-status-and-data-strategy.md`](./docs/phase1-status-and-data-strategy.md) **§7**。
+
+**刻意推迟**
+
+- **Clerk 真登录**：**不纳入阶段 1 关门条件**；与 **Neon 留言墙 POST** 一起在 **阶段 3** 接入（Header 右侧暂保留占位按钮）。见同上文档 **§3**。
 
 **原规划条目（保留）**
 
@@ -154,15 +157,15 @@
 2. **动效** — 同上。
 3. **图标** — 同上。
 4. **页面顺序建议**：`/about` → `/projects` → **`/guestbook`** → **`/blog`** 列表与详情 → 首页（可与「先 mock 卡片」并行，不强制严格顺序）。
-5. **Clerk**：接 **ClerkProvider** + `publicRoutes` 后方可登录；API 可后置。
+5. **Clerk**：阶段 1 **不接**；阶段 3 与留言墙 / 评论写接口一并接 **ClerkProvider** + `middleware` + `publicRoutes`。
 6. **门禁标准**：壳层已通过则可主观 **通过阶段 1**；**列表页视觉**建议以 mock/Sanity 卡片对齐后再关单。
 7. **导航体验**：`loading.tsx` 见 §二之二。
 
 **若不通过**：优先调布局/字体/动效；**列表页**优先 mock 形状 + 组件迁移，再接 CMS。
 
-### 阶段 1.5（可选）：仅 UI — mock Blog / Projects
+### 阶段 1.5（可选）：仅 UI — mock Blog / Projects ✅ **已实现**
 
-在阶段 2 全量 Sanity 之前，可用 **本地常量** 模拟 `Post` / `Project` 字段（见 `docs/phase1-status-and-data-strategy.md` §2.2），迁移 **`BlogPostCard`、`ProjectCard`、`components/ui/Card`** 自 first-portfolio（改为 `cn`、去 `@zolplay` / 去 Redis `views`）。**浏览量**可省略或写死假数，仅用于对齐排版。
+`data/mock/blog-posts.ts`、`data/mock/projects.ts`、`types/content.ts`；组件在 `app/(main)/blog/BlogPostCard.tsx`、`app/(main)/projects/ProjectCard.tsx`、`components/ui/Card.tsx`。**浏览量**为 mock 数字（无 Redis）。阶段 2 将 **`getPosts` / `getSiteSettings`** 换为 Sanity 实现即可复用同一 UI。
 
 ### 阶段 2：接 Sanity（内容真源）
 
@@ -198,6 +201,8 @@
 最小集合大致为：`NEXT_PUBLIC_CLERK_*`、Clerk secret、Sanity 相关、`DATABASE_URL`（接 Neon 阶段起需要）。**不再强制** Resend、Redis、Edge Config。
 
 仍建议：开发时支持按功能拆分校验，或 `SKIP_ENV_VALIDATION`，避免「没接 DB 时 dev 起不来」。
+
+**开发专用（可选）**：`MOCK_PAGE_DELAY_MS` — 仅在 **`NODE_ENV=development`** 下延迟部分 Server Component 页面，便于观察 **`loading.tsx`**；见 `.env.example` 与 `docs/phase1-status-and-data-strategy.md` §7。
 
 ### 4.2 博客评论的交互形态（仅影响 `comments`，不影响留言墙）
 
@@ -237,9 +242,10 @@ Sanity 图床、`next/image` 域名、metadata 与正文标题层级，继续影
 
 - [x] 无 Vanta/Three、无 Redis、无邮件相关 UI 与路由。
 - [x] **壳层**观感接近 first-portfolio（Header / Footer / 导航 / 主题 / 头像动效）；细则见 [`docs/phase1-status-and-data-strategy.md`](./docs/phase1-status-and-data-strategy.md)。
-- [ ] **`/blog`、`/projects`**：卡片与网格、悬浮效果与旧站一致（mock 或已接 Sanity）。
-- [ ] **`/guestbook`**：版式级 mock（列表 + 输入区）。
-- [ ] **Clerk**：可真实 Sign in（或明确推迟到阶段 3 前置并文档化）。
+- [x] **`/blog`、`/projects`**：卡片与网格、悬浮效果（mock 数据 + 旧站同源 Tailwind/动效）。
+- [x] **`/guestbook`**：版式级 mock（列表 + 输入区说明；无真实提交）。
+- [x] **`loading.tsx`**：主要列表/详情路由已加（见 §三）。
+- [ ] **Clerk**：**阶段 3** 与 Neon 写路径一并接入（阶段 1 **不要求**）。
 - [x] 依赖列表明显短于原项目；Framer Motion 保留且无明显卡顿。
 
 **全部打通后**
@@ -266,8 +272,9 @@ Sanity 图床、`next/image` 域名、metadata 与正文标题层级，继续影
 | **勿再迁移** | `components/Vanta*`、`lib/redis.ts`（除非换限流实现）、`app/api/reactions`、`app/api/newsletter`、`emails/*`、Edge Config 分支 |
 | **性能与上线** | 见 `docs/performance-cold-start-and-navigation.md`；规划上对齐 **§二之二**、**§4.6**、阶段 2–3 |
 | **许可与致谢** | 根目录 `LICENSE`（MIT）、`NOTICE`（cali.so → first-portfolio → portfolio-pro）；§4.5 |
-| **阶段 1 进度与 Blog/Projects 数据** | `docs/phase1-status-and-data-strategy.md`（Sanity 形状、mock vs 真连、Clerk） |
+| **阶段 1 进度与 Blog/Projects 数据** | `docs/phase1-status-and-data-strategy.md`（Sanity 形状、mock vs 真连、**loading 验收**、Clerk 推迟） |
+| **Mock 内容源** | `data/mock/blog-posts.ts`、`data/mock/projects.ts`、`data/mock/guestbook.ts` |
 
 ---
 
-*文档版本：v7 — 阶段 1 拆「已达成 / 待补齐」；新增阶段 1.5、§五 细项；索引 `docs/phase1-status-and-data-strategy.md`。*
+*文档版本：v8 — mock Blog/Projects/Guestbook 与 `loading.tsx` 落地；Clerk 明确推迟至阶段 3；§4.1 `MOCK_PAGE_DELAY_MS`。*

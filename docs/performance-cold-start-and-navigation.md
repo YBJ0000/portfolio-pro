@@ -103,7 +103,7 @@
    - 统一 `getPosts` / `getPost` 封装里做 **revalidate + tag**，避免每个页面手写一套 fetch。
 
 3. **UI**  
-   - 为 `/blog`、`/blog/[slug]`、`/guestbook` 等加 **`loading.tsx`**（与品牌一致的骨架，而不是纯转圈）。  
+   - **`loading.tsx`** 已在 `/blog`、`/blog/[slug]`、`/projects`、`/guestbook` 落地（脉冲骨架）。**本地如何验收**（Slow 4G、`MOCK_PAGE_DELAY_MS`）：见 [`docs/phase1-status-and-data-strategy.md`](./phase1-status-and-data-strategy.md) **§7**。  
    - 可选：`Suspense` 边界细分 **侧栏 vs 正文**，先出壳再流式补块。
 
 4. **监控与运维**  
