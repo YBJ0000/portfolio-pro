@@ -30,3 +30,11 @@ export type GuestbookListItem = {
   createdAt: string
   user: { displayName: string; imageUrl: string }
 }
+
+/** Home hero strip — first-portfolio `settings.heroPhotos` is `string[]`; we keep alt + optional tilt for mock. */
+export type HeroPhoto = {
+  src: string
+  alt: string
+  /** degrees; if omitted, matches first-portfolio alternating 2 / -1 */
+  rotateDeg?: number
+}

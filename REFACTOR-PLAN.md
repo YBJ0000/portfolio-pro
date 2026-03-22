@@ -273,7 +273,7 @@ Sanity 图床、`next/image` 域名、metadata 与正文标题层级，继续影
 | **性能与上线** | 见 `docs/performance-cold-start-and-navigation.md`；规划上对齐 **§二之二**、**§4.6**、阶段 2–3 |
 | **许可与致谢** | 根目录 `LICENSE`（MIT）、`NOTICE`（cali.so → first-portfolio → portfolio-pro）；§4.5 |
 | **阶段 1 进度与 Blog/Projects 数据** | `docs/phase1-status-and-data-strategy.md`（Sanity 形状、mock vs 真连、**loading 验收**、Clerk 推迟） |
-| **Mock 内容源** | `data/mock/blog-posts.ts`、`data/mock/projects.ts`、`data/mock/guestbook.ts` |
+| **Mock 内容源** | `data/mock/blog-posts.ts`、`data/mock/projects.ts`、`data/mock/guestbook.ts`、`data/mock/hero-photos.ts`（首页六图条带，`app/(main)/Photos.tsx`） |
 
 ---
 

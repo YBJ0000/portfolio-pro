@@ -1,7 +1,10 @@
+import { Photos } from '~/app/(main)/Photos'
 import { Container } from '~/components/ui/Container'
+import { MOCK_HERO_PHOTOS } from '~/data/mock/hero-photos'
 
 export default function HomePage() {
   return (
+    <>
     <Container className="mt-10">
       <div className="max-w-2xl">
         <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
@@ -15,8 +18,14 @@ export default function HomePage() {
           </code>
           .
         </p>
+      </div>
+    </Container>
 
-        <article className="prose prose-zinc mt-12 max-w-none dark:prose-invert prose-p:leading-relaxed prose-headings:scroll-mt-24">
+    <Photos photos={MOCK_HERO_PHOTOS} />
+
+    <Container className="mt-10 sm:mt-12">
+      <div className="max-w-2xl">
+        <article className="prose prose-zinc max-w-none dark:prose-invert prose-p:leading-relaxed prose-headings:scroll-mt-24">
           <h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
             Refactor approach (English)
           </h2>
@@ -131,5 +140,6 @@ export default function HomePage() {
         </article>
       </div>
     </Container>
+    </>
   )
 }
