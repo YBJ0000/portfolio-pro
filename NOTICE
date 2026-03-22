@@ -1,0 +1,22 @@
+# Attribution / 致谢与上游说明
+
+## 项目关系（便于理解「fork」与「重构」）
+
+1. **[CaliCastle/cali.so](https://github.com/CaliCastle/cali.so)**  
+   Cali（Cali Castle）的个人网站开源项目，线上站点见 [cali.so](https://cali.so/)。README 中提供克隆与部署说明。
+
+2. **[YBJ0000/first-portfolio](https://github.com/YBJ0000/first-portfolio)**  
+   在 GitHub 上 **Fork** 自 `CaliCastle/cali.so` 的版本；你在该仓库上做了定制（如 Sanity/Neon、文案与部署等）。
+
+3. **本仓库 `portfolio-pro`**  
+   **并非** GitHub 上对 `cali.so` 的 Fork，而是以 `first-portfolio` 为参考进行的 **重新实现 / 精简重构**（新代码库）。部分 **UI 与交互思路**（如顶栏、导航、主题切换、首页头像滚动等）延续了自上游一脉的设计语言，属于常见的「基于开源作品学习与再实现」，不等同于复制整仓代码。
+
+## 许可证说明
+
+- **`portfolio-pro` 中由 Bingjia Yang 编写的部分**：以根目录 [`LICENSE`](./LICENSE) 中的 **MIT License** 授权（见该文件正文）。
+- **上游 `cali.so` 仓库**：截至本文撰写时，**仓库根目录未包含 `LICENSE` 文件**；若上游日后增加许可证或额外条款，使用或比对上游代码时请 **以对方仓库为准**。本 `NOTICE` 旨在 **致谢与说明来源**，不构成对上游许可的法律解释。
+
+## 建议
+
+- 若他人复用本仓库，请 **一并保留** 本 `NOTICE` 与 `LICENSE` 中的版权与许可声明。  
+- 若你希望 `first-portfolio` 也更规范，可在该 Fork 中 **向原作者仓库提交 Issue/PR 询问许可文件**，或自行在 Fork 内增加与上游一致的说明（需与上游意愿一致）。
